@@ -39,7 +39,17 @@ shinyServer(function(input, output) {
             strip.text = element_text(size = 20),
             title = element_text(size = 20))
     
-    ggplot(dataframe(), aes(as.character(Time), group = 1)) +
+    inFile <- input$inputFile
+    if (is.null(inFile))
+      return(NULL)
+    
+    
+    dataframe <- read.csv(inFile$datapath)
+    
+    dataframe <- dataframe %>% xmR(., "Measure", recalc = T) %>% select(-Order)
+    dataframe
+    
+    ggplot(dataframe, aes(as.character(Time), group = 1)) +
       geom_line(aes(y = `Central Line`),
                 size = 1, 
                 linetype = "dotted", 
