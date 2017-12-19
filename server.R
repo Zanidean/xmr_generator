@@ -1,15 +1,14 @@
 library(shiny)
 library(devtools)
-devtools::install_github("zanidean/sra", quick = T)
 devtools::install_github("daattali/colourpicker")
 library(colourpicker)
-library(sRa)
+library(xmrr)
 library(ggrepel)
 library(tidyverse)
 library(readxl)
 
 shinyServer(function(input, output) {
-  
+
   dataframe <- reactive({
     inFile <- input$inputFile
     if (is.null(inFile))
@@ -20,7 +19,7 @@ shinyServer(function(input, output) {
     } else {dataframe <- read.csv(inFile$datapath)}
     
     dataframe <- dataframe %>% 
-      xmR(., "Measure", recalc = T) %>% 
+      xmr(., "Measure", recalc = T) %>% 
       select(-Order)
     dataframe
   })
@@ -63,7 +62,10 @@ shinyServer(function(input, output) {
     
     
     dataframe <- dataframe %>% 
-      xmR(., "Measure", recalc = T) %>% 
+      xmr(., "Measure", 
+          recalc = input$recalc,
+          shortrun = c(input$sr1, input$sr2),
+          longrun = c(input$lr1, input$lr2)) %>% 
       select(-Order)
     dataframe
     

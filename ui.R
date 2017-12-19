@@ -1,5 +1,5 @@
 library(shiny)
-library(sRa)
+library(xmrr)
 library(tidyverse)
 library(readxl)
 library(colourpicker)
@@ -65,19 +65,36 @@ shinyUI(fluidPage(theme = "www/paper_modified.css",
                            HTML("<br/>"),
                            HTML("<b>3.</b> Another column must be labeled 'Measure', 
                                 and must contain some numeric measure. This will be used for calculations."),
-                           # HTML("<br/>"),
-                           # HTML("<b>4.</b> Choose the correct file type."),
-                           HTML("<br/>"),
-                           HTML("<br/>"),
+                           helpText(" You can change the labels of this chart in the \"Look\" tab."),
+
                            radioButtons("type", "Choose Type of File:", choices = c(".csv", ".xlsx"), 
                                         inline = F),
                            fileInput("inputFile", NULL, buttonLabel = "Upload a file",
                                      placeholder = "   No file uploaded", accept = "text/csv"),
-                           helpText("If you see error messages, ensure the file type is correct and your columns are labeled properly.")),
+                           helpText("If you see error messages, ensure the file type is correct and your columns are properly labeled \"Time\" and \"Measure\".")
+                           ),
 
-                        tabPanel("Properties",
-                          #HTML("<br/>"),
-                          helpText("Label your chart and choose it's properties"),
+
+                        tabPanel("Runs",
+                                 helpText("Define the arguments used to build your chart"),
+                                 checkboxInput("recalc", "Recalculate the bounds?", value = T),
+                                 
+                                 helpText("How many points is a shortrun?"),
+                                 numericInput("sr2", label = NULL, 4),
+                                 
+                                 helpText("How many of those points need to be significant to qualify it as a shortrun?"),
+                                 numericInput("sr1", label = NULL, 3),
+                                 
+                                 helpText("How many points is a longrun?"),
+                                 numericInput("lr2", label = NULL, 8),
+                                 helpText("How many of them do you want to use in your calculation?"),
+                                 numericInput("lr1", label = NULL, 5)
+                        ),
+
+                        tabPanel("Look",
+                            
+                          #HTML("<br/>"),                  
+                          helpText("Label your chart and make it your own"),
                            textInput("title", label = "Chart Title:", value = ""),
                           textInput("subtitle", label = "Subtitle:", value = ""),
                           radioButtons("center", "Title Position:", choices = c("Left", "Center"), 
